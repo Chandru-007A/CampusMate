@@ -1,0 +1,115 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "Hi",
+        "Hello",
+        "Hey",
+        "Good morning",
+        "Good afternoon",
+        "What's up"
+      ],
+      "responses": [
+        "Hello! How can I assist you with college admissions today?",
+        "Hi there! Ask me anything about admissions.",
+        "Hey! I'm your AI admission assistant."
+      ]
+    },
+    {
+      "tag": "cutoff_info",
+      "patterns": [
+        "What is the cutoff for CSE?",
+        "Tell me about cutoffs",
+        "How are cutoffs calculated?",
+        "Cutoff marks for engineering",
+        "What cutoff do I need for top colleges?"
+      ],
+      "responses": [
+        "Cutoffs vary by college, category, and year. You can use our ML predictor for personalized cutoff estimates.",
+        "I can help you check predicted cutoffs using our ML model. What's your rank and preferred course?"
+      ]
+    },
+    {
+      "tag": "admission_probability",
+      "patterns": [
+        "What are my chances?",
+        "Can I get into a good college?",
+        "Admission probability",
+        "Will I get CSE in Anna University?",
+        "Probability of admission"
+      ],
+      "responses": [
+        "Our AI probability calculator can estimate your chances. Please share your rank, category, and preferred course.",
+        "I can compute your admission probability using our ML model. Just provide your details."
+      ]
+    },
+    {
+      "tag": "reservation",
+      "patterns": [
+        "How does reservation work?",
+        "Category impact on cutoff",
+        "BC cutoff vs OC",
+        "Reservation benefits",
+        "What is category wise cutoff?"
+      ],
+      "responses": [
+        "Reservation categories (OC, BC, MBC, SC, ST) significantly affect cutoffs. Lower categories often have lower cutoff ranks. Our predictor accounts for this."
+      ]
+    },
+    {
+      "tag": "trends",
+      "patterns": [
+        "Show cutoff trends",
+        "Historical cutoff data",
+        "Cutoff trend analysis",
+        "How cutoffs changed over years",
+        "Previous year cutoffs"
+      ],
+      "responses": [
+        "You can view cutoff trends using our trends endpoint. It shows how cutoffs for a college and course varied over the years."
+      ]
+    },
+    {
+      "tag": "safe_dream_target",
+      "patterns": [
+        "What are safe colleges for me?",
+        "Dream colleges",
+        "Target colleges",
+        "List safe and dream colleges",
+        "Categorize colleges by rank"
+      ],
+      "responses": [
+        "Based on your rank, we can categorize colleges into Safe (high chance), Target (moderate), and Dream (ambitious). Use our probability endpoint for each college."
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": [
+        "Thanks",
+        "Thank you",
+        "That's helpful",
+        "Thanks a lot",
+        "Appreciate it"
+      ],
+      "responses": [
+        "You're welcome! If you have more questions, I'm here to help.",
+        "Happy to assist! Let me know if you need anything else."
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "Bye",
+        "Goodbye",
+        "See you later",
+        "Exit",
+        "Quit"
+      ],
+      "responses": [
+        "Goodbye! Best of luck with your admissions!",
+        "Take care! Come back if you have more queries."
+      ]
+    }
+  ]
+}

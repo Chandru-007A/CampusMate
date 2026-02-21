@@ -137,3 +137,26 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Python virtual environments
+venv/
+env/
+ENV/
+chatbot-service/venv/
+ml-service/venv/
+
+# Generated model files (from training)
+chatbot-service/model/
+chatbot-service/model/**/*.bin
+chatbot-service/model/**/*.safetensors
+chatbot-service/model/results/
+ml-service/model/
+ml-service/model/*.pkl
+
+# Database CSV files (if you don't want to commit raw data)
+database/*.csv
+!database/schema.sql
+
+# Python cache files
+__pycache__/
+*.pyc
