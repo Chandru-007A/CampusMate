@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import joblib
 import numpy as np
@@ -17,6 +18,15 @@ le_category = joblib.load(MODEL_DIR / 'le_category.pkl')
 features = joblib.load(MODEL_DIR / 'features.pkl')
 
 app = FastAPI(title="ML Admission Predictor", version="1.0")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://localhost:3001"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Request/Response models
 class CutoffRequest(BaseModel):

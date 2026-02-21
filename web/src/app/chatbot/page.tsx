@@ -27,10 +27,12 @@ export default function ChatbotPage() {
         body: JSON.stringify({ message: input }),
       });
       const data = await res.json();
-      const botMsg = { text: data.reply, sender: 'bot' as const };
+      const botMsg = { text: data.response || data.reply || 'Sorry, I could not understand that.', sender: 'bot' as const };
       setMessages((prev) => [...prev, botMsg]);
     } catch (error) {
       console.error('Chatbot error', error);
+      const errorMsg = { text: 'Sorry, I encountered an error. Please try again.', sender: 'bot' as const };
+      setMessages((prev) => [...prev, errorMsg]);
     }
   };
 
