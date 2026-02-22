@@ -55,21 +55,18 @@ export default function DashboardPage() {
   };
 
   return (
-    <div style={{ padding: '2rem', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
+    <div className="section-overlay" style={{ padding: '2rem', minHeight: '100vh' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <div style={{ 
+        <div className="card-overlay" style={{ 
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center', 
           marginBottom: '2rem', 
-          backgroundColor: '#fff', 
-          padding: '1.5rem', 
-          borderRadius: '8px', 
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)' 
+          padding: '1.5rem'
         }}>
           <div>
-            <h1 style={{ margin: '0 0 0.5rem 0', color: '#333' }}>Dashboard</h1>
-            {user && <p style={{ margin: 0, color: '#666' }}>Welcome back, <strong>{user.name}</strong>!</p>}
+            <h1 style={{ margin: '0 0 0.5rem 0', color: '#fff' }}>Dashboard</h1>
+            {user && <p style={{ margin: 0, color: '#ccc' }}>Welcome back, <strong style={{ color: '#FF79C6' }}>{user.name}</strong>!</p>}
           </div>
           <button 
             onClick={handleLogout}
@@ -87,35 +84,42 @@ export default function DashboardPage() {
           </button>
         </div>
         
-        <h2 style={{ marginBottom: '1rem', color: '#333' }}>Available Colleges</h2>
+        <h2 style={{ marginBottom: '1rem', color: '#fff' }}>Available Colleges</h2>
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '3rem', backgroundColor: '#fff', borderRadius: '8px' }}>
-            <p style={{ fontSize: '1.125rem', color: '#666' }}>Loading colleges...</p>
+          <div className="card-overlay" style={{ textAlign: 'center', padding: '3rem' }}>
+            <p style={{ fontSize: '1.125rem', color: '#ccc' }}>Loading colleges...</p>
           </div>
         ) : colleges.length > 0 ? (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
             {colleges.map((college) => (
               <div 
-                key={college.id} 
+                key={college.id}
+                className="card-overlay" 
                 style={{
-                  backgroundColor: '#fff',
                   padding: '1.5rem',
-                  borderRadius: '8px',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                  transition: 'transform 0.2s'
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = '0 8px 16px rgba(255, 121, 198, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '';
                 }}
               >
-                <h3 style={{ margin: '0 0 0.5rem 0', color: '#0070f3' }}>{college.name}</h3>
-                <p style={{ margin: '0.25rem 0', color: '#666' }}><strong>Course:</strong> {college.course}</p>
-                <p style={{ margin: '0.25rem 0', color: '#666' }}><strong>Location:</strong> {college.location}</p>
-                <p style={{ margin: '0.25rem 0', color: '#666' }}><strong>Category:</strong> {college.category}</p>
-                <p style={{ margin: '0.25rem 0', color: '#e63946', fontWeight: 'bold' }}>Cutoff Rank: {college.cutoff}</p>
+                <h3 style={{ margin: '0 0 0.5rem 0', color: '#FF79C6' }}>{college.name}</h3>
+                <p style={{ margin: '0.25rem 0', color: '#ccc' }}><strong>Course:</strong> {college.course}</p>
+                <p style={{ margin: '0.25rem 0', color: '#ccc' }}><strong>Location:</strong> {college.location}</p>
+                <p style={{ margin: '0.25rem 0', color: '#ccc' }}><strong>Category:</strong> {college.category}</p>
+                <p style={{ margin: '0.25rem 0', color: '#FFD700', fontWeight: 'bold' }}>Cutoff Rank: {college.cutoff}</p>
               </div>
             ))}
           </div>
         ) : (
-          <div style={{ textAlign: 'center', padding: '3rem', backgroundColor: '#fff', borderRadius: '8px' }}>
-            <p style={{ color: '#666' }}>No colleges available at the moment.</p>
+          <div className="card-overlay" style={{ textAlign: 'center', padding: '3rem' }}>
+            <p style={{ color: '#ccc' }}>No colleges available at the moment.</p>
           </div>
         )}
       </div>

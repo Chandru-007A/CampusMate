@@ -1,6 +1,5 @@
 'use client';
 
-import LaserFlow from '@/components/LaserFlow';
 import { useRef } from 'react';
 import Link from 'next/link';
 
@@ -28,37 +27,20 @@ export default function Home() {
 
   return (
     <div
+      className="landing-section"
       style={{
         height: '100vh',
         position: 'relative',
         overflow: 'hidden',
-        backgroundColor: '#060010',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      <LaserFlow
-        horizontalBeamOffset={0.1}
-        verticalBeamOffset={0.0}
-        color="#CF9EFF"
-        wispDensity={5}
-        wispSpeed={10.5}
-        wispIntensity={20}
-        flowSpeed={0.25}
-        flowStrength={0.29}
-        fogIntensity={1}
-        fogScale={0.53}
-        fogFallSpeed={1.02}
-        decay={3}
-        falloffStart={0.99}
-      />
-
       <div
         style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
           width: '86%',
           maxWidth: '800px',
           padding: '2rem',
@@ -71,11 +53,13 @@ export default function Home() {
           backdropFilter: 'blur(8px)',
         }}
       >
-        <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>CampusMate</h1>
-        <p style={{ fontSize: '1.2rem', marginBottom: '2rem' }}>
+        <h1 style={{ fontSize: '3rem', marginBottom: '1rem', textShadow: '0 2px 12px rgba(0,0,0,0.95)' }}>
+          CampusMate
+        </h1>
+        <p style={{ fontSize: '1.2rem', marginBottom: '2rem', textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
           AI-Powered College Admission Predictor & Counseling Portal
         </p>
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <Link
             href="/prediction"
             style={{
@@ -85,6 +69,7 @@ export default function Home() {
               borderRadius: '8px',
               textDecoration: 'none',
               fontWeight: 'bold',
+              transition: 'all 0.3s ease',
             }}
           >
             Predict Colleges
@@ -99,6 +84,7 @@ export default function Home() {
               textDecoration: 'none',
               fontWeight: 'bold',
               border: '2px solid #FF79C6',
+              transition: 'all 0.3s ease',
             }}
           >
             Chat with Counselor

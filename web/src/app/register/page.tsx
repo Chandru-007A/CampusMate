@@ -48,98 +48,107 @@ export default function RegisterPage() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '4rem auto', padding: '2rem', background: '#fff', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
-      <h1 style={{ marginBottom: '1.5rem', color: '#333' }}>Register for CampusMate</h1>
+    <div className="section-overlay-light" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+      <div className="card-overlay" style={{ maxWidth: '400px', width: '100%', padding: '2rem' }}>
+        <h1 style={{ marginBottom: '1.5rem', color: '#fff' }}>Register for CampusMate</h1>
       
-      {error && (
-        <div style={{ padding: '0.75rem', marginBottom: '1rem', backgroundColor: '#fee', color: '#c33', borderRadius: '4px', border: '1px solid #fcc' }}>
-          {error}
-        </div>
-      )}
+        {error && (
+          <div style={{ padding: '0.75rem', marginBottom: '1rem', backgroundColor: 'rgba(255, 50, 50, 0.2)', color: '#ff6b6b', borderRadius: '4px', border: '1px solid rgba(255, 100, 100, 0.5)' }}>
+            {error}
+          </div>
+        )}
       
-      {success && (
-        <div style={{ padding: '0.75rem', marginBottom: '1rem', backgroundColor: '#efe', color: '#3c3', borderRadius: '4px', border: '1px solid #cfc' }}>
-          Registration successful! Redirecting to login...
-        </div>
-      )}
+        {success && (
+          <div style={{ padding: '0.75rem', marginBottom: '1rem', backgroundColor: 'rgba(50, 255, 50, 0.2)', color: '#6bff6b', borderRadius: '4px', border: '1px solid rgba(100, 255, 100, 0.5)' }}>
+            Registration successful! Redirecting to login...
+          </div>
+        )}
       
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Name</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: '#fff' }}>Name</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              disabled={loading}
+              placeholder="Enter your full name"
+              style={{ 
+                width: '100%', 
+                padding: '0.75rem', 
+                border: '1px solid rgba(255, 121, 198, 0.3)',
+                backgroundColor: 'rgba(6, 0, 16, 0.5)', 
+                borderRadius: '4px',
+                color: '#fff',
+                fontSize: '1rem'
+              }}
+            />
+          </div>
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: '#fff' }}>Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={loading}
+              placeholder="Enter your email"
+              style={{ 
+                width: '100%', 
+                padding: '0.75rem', 
+                border: '1px solid rgba(255, 121, 198, 0.3)', 
+                backgroundColor: 'rgba(6, 0, 16, 0.5)',
+                borderRadius: '4px',
+                fontSize: '1rem',
+                color: '#fff'
+              }}
+            />
+          </div>
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: '#fff' }}>Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={loading}
+              placeholder="Enter your password"
+              style={{ 
+                width: '100%', 
+                padding: '0.75rem', 
+                border: '1px solid rgba(255, 121, 198, 0.3)', 
+                backgroundColor: 'rgba(6, 0, 16, 0.5)',
+                borderRadius: '4px',
+                fontSize: '1rem',
+                color: '#fff'
+              }}
+            />
+          </div>
+          <button 
+            type="submit" 
             disabled={loading}
-            placeholder="Enter your full name"
             style={{ 
-              width: '100%', 
-              padding: '0.75rem', 
-              border: '1px solid #ddd', 
+              width: '100%',
+              padding: '0.75rem 1rem', 
+              backgroundColor: loading ? '#666' : '#FF79C6',
+              color: loading ? '#999' : '#060010',
+              border: 'none',
               borderRadius: '4px',
-              fontSize: '1rem'
+              fontSize: '1rem',
+              fontWeight: 'bold',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              transition: 'all 0.3s ease'
             }}
-          />
-        </div>
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            disabled={loading}
-            placeholder="Enter your email"
-            style={{ 
-              width: '100%', 
-              padding: '0.75rem', 
-              border: '1px solid #ddd', 
-              borderRadius: '4px',
-              fontSize: '1rem'
-            }}
-          />
-        </div>
-        <div style={{ marginBottom: '1.5rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            disabled={loading}
-            placeholder="Enter your password"
-            style={{ 
-              width: '100%', 
-              padding: '0.75rem', 
-              border: '1px solid #ddd', 
-              borderRadius: '4px',
-              fontSize: '1rem'
-            }}
-          />
-        </div>
-        <button 
-          type="submit" 
-          disabled={loading}
-          style={{ 
-            width: '100%',
-            padding: '0.75rem 1rem', 
-            backgroundColor: loading ? '#ccc' : '#0070f3',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '4px',
-            fontSize: '1rem',
-            fontWeight: '500',
-            cursor: loading ? 'not-allowed' : 'pointer'
-          }}
-        >
-          {loading ? 'Registering...' : 'Register'}
-        </button>
-      </form>
-      
-      <p style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-        Already have an account? <Link href="/login" style={{ color: '#0070f3', textDecoration: 'none' }}>Login</Link>
-      </p>
+          >
+            {loading ? 'Registering...' : 'Register'}
+          </button>
+        </form>
+        
+        <p style={{ marginTop: '1.5rem', textAlign: 'center', color: '#ccc' }}>
+          Already have an account? <Link href="/login" style={{ color: '#FF79C6', textDecoration: 'none', fontWeight: 'bold' }}>Login</Link>
+        </p>
+      </div>
     </div>
   );
 }

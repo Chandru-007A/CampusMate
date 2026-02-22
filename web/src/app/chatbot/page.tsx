@@ -37,9 +37,11 @@ export default function ChatbotPage() {
   };
 
   return (
-    <div style={{ height: '80vh', padding: '2rem' }}>
-      <h1>Chat with Counselor</h1>
-      <ChatUI messages={messages} input={input} setInput={setInput} sendMessage={sendMessage} />
+    <div className="section-overlay" style={{ minHeight: '90vh', padding: '2rem', display: 'flex', flexDirection: 'column' }}>
+      <h1 className="text-readable-strong" style={{ marginBottom: '1rem', fontSize: '2rem' }}>Chat with Counselor</h1>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <ChatUI messages={messages} input={input} setInput={setInput} sendMessage={sendMessage} />
+      </div>
     </div>
   );
 }

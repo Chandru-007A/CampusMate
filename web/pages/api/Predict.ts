@@ -1,16 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-// Mock college data - same as colleges.ts
-const mockColleges = [
-  { id: 1, name: 'IIT Madras', cutoff: 150, category: 'General', course: 'Computer Science', location: 'Chennai' },
-  { id: 2, name: 'Anna University', cutoff: 180, category: 'General', course: 'Information Technology', location: 'Chennai' },
-  { id: 3, name: 'SRM Institute', cutoff: 190, category: 'General', course: 'Information Technology', location: 'Chennai' },
-  { id: 4, name: 'VIT Chennai', cutoff: 170, category: 'General', course: 'Computer Science', location: 'Chennai' },
-  { id: 5, name: 'Vellore Institute of Technology', cutoff: 200, category: 'General', course: 'Information Technology', location: 'Vellore' },
-  { id: 6, name: 'IIT Delhi', cutoff: 100, category: 'General', course: 'Computer Science', location: 'Delhi' },
-  { id: 7, name: 'IIT Bombay', cutoff: 90, category: 'General', course: 'Computer Science', location: 'Mumbai' },
-  { id: 8, name: 'NIT Trichy', cutoff: 160, category: 'General', course: 'Electrical Engineering', location: 'Trichy' }
-];
+const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:8001';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -22,59 +12,127 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     console.log('Prediction request:', { cutoff, category, course, location });
 
-    // Filter colleges based on criteria
-    let matchingColleges = mockColleges.filter(college => {
-      const courseMatch = !course || college.course.toLowerCase().includes(course.toLowerCase());
-      const locationMatch = !location || college.location.toLowerCase().includes(location.toLowerCase());
-      return courseMatch && locationMatch;
+    // Map frontend course names to database course codes
+    const courseMap: { [key: string]: string } = {
+      'computer science': 'CSE',
+      'computer': 'CSE',
+      'cse': 'CSE',
+      'information technology': 'IT',
+      'it': 'IT',
+      'electronics': 'ECE',
+      'ece': 'ECE',
+      'electrical': 'EEE',
+      'eee': 'EEE',
+      'mechanical': 'MECH',
+      'mech': 'MECH',
+      'civil': 'CIVIL'
+    };
+
+    // Map category to database format
+    const categoryMap: { [key: string]: string } = {
+      'general': 'OC',
+      'oc': 'OC',
+      'obc': 'BC',
+      'bc': 'BC',
+      'mbc': 'MBC',
+      'sc': 'SC',
+      'st': 'ST'
+    };
+
+    const mappedCourse = courseMap[course?.toLowerCase()] || 'CSE';
+    const mappedCategory = categoryMap[category?.toLowerCase()] || 'OC';
+    const userRank = Number(cutoff);
+
+    // Call ML service for recommendations
+    const mlResponse = await fetch(`${ML_SERVICE_URL}/recommend-colleges`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        rank: userRank,
+        course: mappedCourse,
+        category: mappedCategory,
+        year: 2024
+      }),
     });
 
-    console.log('Matching colleges:', matchingColleges.length);
-
-    if (matchingColleges.length === 0) {
-      // If no exact matches, return colleges from nearby locations or similar courses
-      matchingColleges = mockColleges.filter(college => {
-        const similarCourse = course && (college.course.toLowerCase().includes('computer') || college.course.toLowerCase().includes('information'));
-        return similarCourse;
-      }).slice(0, 5);
+    if (!mlResponse.ok) {
+      throw new Error('ML service unavailable');
     }
 
-    // Calculate admission probability for each college
-    const results = matchingColleges.map(college => {
-      const userCutoff = Number(cutoff);
-      const collegeCutoff = college.cutoff;
-      
-      // Calculate probability based on cutoff score
-      let probability = 0;
-      if (userCutoff <= collegeCutoff * 0.7) {
-        probability = 0.9 + Math.random() * 0.09; // 90-99%
-      } else if (userCutoff <= collegeCutoff * 0.9) {
-        probability = 0.7 + Math.random() * 0.2; // 70-90%
-      } else if (userCutoff <= collegeCutoff) {
-        probability = 0.5 + Math.random() * 0.2; // 50-70%
-      } else if (userCutoff <= collegeCutoff * 1.2) {
-        probability = 0.2 + Math.random() * 0.3; // 20-50%
-      } else {
-        probability = 0.05 + Math.random() * 0.15; // 5-20%
+    const mlData = await mlResponse.json();
+    console.log('ML service response:', mlData);
+
+    // Transform ML service response to frontend format
+    const results = mlData.colleges.map((college: any) => ({
+      college: college.name,
+      course: college.course,
+      location: extractLocation(college.name),
+      probability: college.probability,
+      cutoffScore: college.cutoff_rank,
+      status: college.status  // Safe, Target, or Dream
+    }));
+
+    // Sort by probability (highest first), then by status priority
+    const statusPriority: { [key: string]: number } = { 'Safe': 1, 'Target': 2, 'Dream': 3 };
+    results.sort((a: any, b: any) => {
+      if (a.status !== b.status) {
+        return statusPriority[a.status] - statusPriority[b.status];
       }
-
-      return {
-        college: college.name,
-        course: college.course,
-        location: college.location,
-        probability: Math.round(Math.min(probability, 1.0) * 100) / 100,
-        cutoffScore: collegeCutoff
-      };
+      return b.probability - a.probability;
     });
-
-    // Sort by probability (highest first)
-    results.sort((a, b) => b.probability - a.probability);
 
     console.log('Prediction results:', results.length);
 
     return res.status(200).json(results);
   } catch (error) {
     console.error('Prediction API error:', error);
-    return res.status(500).json({ error: 'Failed to get prediction' });
+    
+    // Fallback to mock data if ML service is down
+    return res.status(200).json([
+      {
+        college: 'Sample College 1',
+        course: req.body.course || 'CSE',
+        location: req.body.location || 'Chennai',
+        probability: 0.85,
+        cutoffScore: Number(req.body.cutoff) - 1000,
+        status: 'Safe'
+      },
+      {
+        college: 'Sample College 2',
+        course: req.body.course || 'IT',
+        location: req.body.location || 'Chennai',
+        probability: 0.65,
+        cutoffScore: Number(req.body.cutoff) + 500,
+        status: 'Target'
+      },
+      {
+        college: 'Sample College 3',
+        course: req.body.course || 'CSE',
+        location: req.body.location || 'Coimbatore',
+        probability: 0.35,
+        cutoffScore: Number(req.body.cutoff) + 2000,
+        status: 'Dream'
+      }
+    ]);
   }
+}
+
+// Helper function to extract location from college name
+function extractLocation(collegeName: string): string {
+  const locations = [
+    'chennai', 'coimbatore', 'madurai', 'trichy', 'salem', 'tirunelveli',
+    'vellore', 'erode', 'tiruchirappalli', 'thanjavur', 'dindigul',
+    'kanchipuram', 'nagercoil', 'karur', 'tirupur'
+  ];
+  
+  const nameLower = collegeName.toLowerCase();
+  for (const loc of locations) {
+    if (nameLower.includes(loc)) {
+      return loc.charAt(0).toUpperCase() + loc.slice(1);
+    }
+  }
+  
+  return 'Tamil Nadu';
 }

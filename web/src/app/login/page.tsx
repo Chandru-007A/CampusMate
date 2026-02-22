@@ -57,27 +57,28 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '4rem auto', padding: '2rem', background: '#fff', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
-      <h1 style={{ marginBottom: '1.5rem', color: '#333' }}>Login to CampusMate</h1>
+    <div className="section-overlay-light" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+      <div className="card-overlay" style={{ maxWidth: '400px', width: '100%', padding: '2rem' }}>
+        <h1 style={{ marginBottom: '1.5rem', color: '#fff' }}>Login to CampusMate</h1>
       
-      {error && (
-        <div style={{ padding: '0.75rem', marginBottom: '1rem', backgroundColor: '#fee', color: '#c33', borderRadius: '4px', border: '1px solid #fcc' }}>
-          {error}
-        </div>
-      )}
+        {error && (
+          <div style={{ padding: '0.75rem', marginBottom: '1rem', backgroundColor: 'rgba(255, 50, 50, 0.2)', color: '#ff6b6b', borderRadius: '4px', border: '1px solid rgba(255, 100, 100, 0.5)' }}>
+            {error}
+          </div>
+        )}
       
-      {success && (
-        <div style={{ padding: '0.75rem', marginBottom: '1rem', backgroundColor: '#efe', color: '#3c3', borderRadius: '4px', border: '1px solid #cfc' }}>
-          Login successful! Redirecting...
-        </div>
-      )}
+        {success && (
+          <div style={{ padding: '0.75rem', marginBottom: '1rem', backgroundColor: 'rgba(50, 255, 50, 0.2)', color: '#6bff6b', borderRadius: '4px', border: '1px solid rgba(100, 255, 100, 0.5)' }}>
+            Login successful! Redirecting...
+          </div>
+        )}
       
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Email</label>
-          <input
-            type="email"
-            value={email}
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: '#fff' }}>Email</label>
+            <input
+              type="email"
+              value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
             disabled={loading}
@@ -85,14 +86,16 @@ export default function LoginPage() {
             style={{ 
               width: '100%', 
               padding: '0.75rem', 
-              border: '1px solid #ddd', 
+              border: '1px solid rgba(255, 121, 198, 0.3)', 
+              backgroundColor: 'rgba(6, 0, 16, 0.5)',
               borderRadius: '4px',
-              fontSize: '1rem'
+              fontSize: '1rem',
+              color: '#fff'
             }}
           />
         </div>
         <div style={{ marginBottom: '1.5rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Password</label>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: '#fff' }}>Password</label>
           <input
             type="password"
             value={password}
@@ -103,9 +106,11 @@ export default function LoginPage() {
             style={{ 
               width: '100%', 
               padding: '0.75rem', 
-              border: '1px solid #ddd', 
+              border: '1px solid rgba(255, 121, 198, 0.3)', 
+              backgroundColor: 'rgba(6, 0, 16, 0.5)',
               borderRadius: '4px',
-              fontSize: '1rem'
+              fontSize: '1rem',
+              color: '#fff'
             }}
           />
         </div>
@@ -115,28 +120,30 @@ export default function LoginPage() {
           style={{ 
             width: '100%',
             padding: '0.75rem 1rem', 
-            backgroundColor: loading ? '#ccc' : '#0070f3',
-            color: '#fff',
+            backgroundColor: loading ? '#666' : '#FF79C6',
+            color: loading ? '#999' : '#060010',
             border: 'none',
             borderRadius: '4px',
             fontSize: '1rem',
-            fontWeight: '500',
-            cursor: loading ? 'not-allowed' : 'pointer'
+            fontWeight: 'bold',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            transition: 'all 0.3s ease'
           }}
         >
           {loading ? 'Logging in...' : 'Login'}
         </button>
       </form>
       
-      <div style={{ marginTop: '1.5rem', padding: '1rem', backgroundColor: '#f5f5f5', borderRadius: '4px' }}>
-        <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.875rem', color: '#666' }}>Test Accounts:</p>
-        <p style={{ margin: '0.25rem 0', fontSize: '0.875rem', fontFamily: 'monospace' }}>test@example.com / password123</p>
-        <p style={{ margin: '0.25rem 0', fontSize: '0.875rem', fontFamily: 'monospace' }}>demo@example.com / demo123</p>
+      <div style={{ marginTop: '1.5rem', padding: '1rem', backgroundColor: 'rgba(255, 121, 198, 0.1)', borderRadius: '4px', border: '1px solid rgba(255, 121, 198, 0.2)' }}>
+        <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.875rem', color: '#ccc' }}>Test Accounts:</p>
+        <p style={{ margin: '0.25rem 0', fontSize: '0.875rem', fontFamily: 'monospace', color: '#FF79C6' }}>test@example.com / password123</p>
+        <p style={{ margin: '0.25rem 0', fontSize: '0.875rem', fontFamily: 'monospace', color: '#FF79C6' }}>demo@example.com / demo123</p>
       </div>
       
-      <p style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-        Don't have an account? <Link href="/register" style={{ color: '#0070f3', textDecoration: 'none' }}>Register</Link>
+      <p style={{ marginTop: '1.5rem', textAlign: 'center', color: '#ccc' }}>
+        Don't have an account? <Link href="/register" style={{ color: '#FF79C6', textDecoration: 'none', fontWeight: 'bold' }}>Register</Link>
       </p>
+      </div>
     </div>
   );
 }

@@ -10,6 +10,7 @@ interface PredictionResult {
   location: string;
   probability: number;
   cutoffScore: number;
+  status?: string;  // Safe, Target, Dream
 }
 
 export default function PredictionPage() {
@@ -47,23 +48,24 @@ export default function PredictionPage() {
   };
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
-      <h1 style={{ marginBottom: '2rem' }}>College Admission Predictor</h1>
+    <div className="section-overlay" style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto', minHeight: '100vh' }}>
+      <h1 className="text-readable-strong" style={{ marginBottom: '2rem', fontSize: '2.5rem' }}>College Admission Predictor</h1>
       <StudentForm onSubmit={handlePredict} />
       
       {loading && (
         <div style={{ padding: '2rem', textAlign: 'center' }}>
-          <p style={{ fontSize: '1.2rem' }}>🔍 Analyzing your profile and finding matching colleges...</p>
+          <p className="text-readable" style={{ fontSize: '1.2rem' }}>🔍 Analyzing your profile and finding matching colleges...</p>
         </div>
       )}
       
       {error && (
-        <div style={{ 
+        <div className="card-overlay" style={{ 
           padding: '1rem', 
           margin: '1rem 0', 
-          backgroundColor: '#fee', 
+          backgroundColor: 'rgba(255, 50, 50, 0.2)', 
           borderRadius: '8px',
-          color: '#c00'
+          border: '1px solid rgba(255, 100, 100, 0.5)',
+          color: '#ff6b6b'
         }}>
           {error}
         </div>
@@ -71,52 +73,100 @@ export default function PredictionPage() {
       
       {!loading && results.length > 0 && (
         <div style={{ marginTop: '2rem' }}>
-          <h2 style={{ marginBottom: '1.5rem' }}>Your Admission Predictions ({results.length} colleges)</h2>
+          <h2 className="text-readable-strong" style={{ marginBottom: '0.5rem', fontSize: '2rem' }}>
+            Your Admission Predictions
+          </h2>
+          <p className="text-readable" style={{ marginBottom: '1.5rem', fontSize: '1rem', color: '#ccc' }}>
+            Found {results.length} colleges • Based on real cutoff data from 2020-2023
+          </p>
+          
+          {/* Category Summary */}
+          <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+            {['Safe', 'Target', 'Dream'].map(status => {
+              const count = results.filter(r => r.status === status).length;
+              if (count === 0) return null;
+              return (
+                <div key={status} className="card-overlay" style={{ padding: '1rem', flex: '1', minWidth: '150px' }}>
+                  <div style={{ fontSize: '0.85rem', color: '#ccc', marginBottom: '0.25rem' }}>{status} Colleges</div>
+                  <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#FF79C6' }}>{count}</div>
+                </div>
+              );
+            })}
+          </div>
+          
           <div style={{ display: 'grid', gap: '1.5rem' }}>
-            {results.map((result, idx) => (
-              <div 
-                key={idx} 
-                style={{ 
-                  border: '1px solid #ddd',
-                  borderRadius: '12px',
-                  padding: '1.5rem',
-                  backgroundColor: '#fff',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <div style={{ flex: 1 }}>
-                    <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.4rem' }}>
-                      {result.college}
-                    </h3>
-                    <p style={{ margin: '0.25rem 0', color: '#666' }}>
-                      <strong>Course:</strong> {result.course}
-                    </p>
-                    <p style={{ margin: '0.25rem 0', color: '#666' }}>
-                      <strong>Location:</strong> {result.location}
-                    </p>
-                    <p style={{ margin: '0.25rem 0', color: '#666' }}>
-                      <strong>Cutoff Score:</strong> {result.cutoffScore}
-                    </p>
+            {results.map((result, idx) => {
+              // Get status badge styling
+              const statusColors = {
+                Safe: { bg: 'rgba(76, 175, 80, 0.25)', border: '#4caf50', text: '#81c784' },
+                Target: { bg: 'rgba(255, 152, 0, 0.25)', border: '#ff9800', text: '#ffb74d' },
+                Dream: { bg: 'rgba(156, 39, 176, 0.25)', border: '#9c27b0', text: '#ba68c8' }
+              };
+              const statusStyle = statusColors[result.status as keyof typeof statusColors] || statusColors.Target;
+              
+              return (
+                <div 
+                  key={idx}
+                  className="card-overlay" 
+                  style={{ 
+                    padding: '1.5rem'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+                    <div style={{ flex: 1, minWidth: '250px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
+                        <h3 style={{ margin: 0, fontSize: '1.4rem', color: '#FF79C6' }}>
+                          {result.college}
+                        </h3>
+                        {result.status && (
+                          <span style={{
+                            padding: '0.25rem 0.75rem',
+                            backgroundColor: statusStyle.bg,
+                            border: `1px solid ${statusStyle.border}`,
+                            borderRadius: '12px',
+                            fontSize: '0.8rem',
+                            fontWeight: '600',
+                            color: statusStyle.text
+                          }}>
+                            {result.status}
+                          </span>
+                        )}
+                      </div>
+                      <p style={{ margin: '0.25rem 0', color: '#ccc' }}>
+                        <strong style={{ color: '#fff' }}>Course:</strong> {result.course}
+                      </p>
+                      <p style={{ margin: '0.25rem 0', color: '#ccc' }}>
+                        <strong style={{ color: '#fff' }}>Location:</strong> {result.location}
+                      </p>
+                      <p style={{ margin: '0.25rem 0', color: '#ccc' }}>
+                        <strong style={{ color: '#fff' }}>Cutoff Rank:</strong> {result.cutoffScore}
+                      </p>
+                    </div>
+                    <div style={{ marginLeft: '2rem' }}>
+                      <ProbabilityMeter probability={result.probability} />
+                    </div>
                   </div>
-                  <div style={{ marginLeft: '2rem' }}>
-                    <ProbabilityMeter probability={result.probability} />
+                  
+                  <div style={{ 
+                    marginTop: '1rem', 
+                    padding: '0.75rem', 
+                    backgroundColor: result.probability >= 0.7 ? 'rgba(76, 175, 80, 0.2)' : result.probability >= 0.5 ? 'rgba(255, 152, 0, 0.2)' : 'rgba(244, 67, 54, 0.2)',
+                    border: result.probability >= 0.7 ? '1px solid rgba(76, 175, 80, 0.5)' : result.probability >= 0.5 ? '1px solid rgba(255, 152, 0, 0.5)' : '1px solid rgba(244, 67, 54, 0.5)',
+                    borderRadius: '8px',
+                    fontSize: '0.95rem',
+                    color: result.probability >= 0.7 ? '#81c784' : result.probability >= 0.5 ? '#ffb74d' : '#e57373',
+                    fontWeight: '500'
+                  }}>
+                    {result.status === 'Safe' && '✅ Excellent match! You have a strong chance of admission here.'}
+                    {result.status === 'Target' && '🎯 Good opportunity! Your profile aligns well with this college.'}
+                    {result.status === 'Dream' && '🌟 Aspirational choice! Worth applying if this is your preferred college.'}
+                    {!result.status && result.probability >= 0.7 && '✅ High chance of admission! This is a great match for your profile.'}
+                    {!result.status && result.probability >= 0.5 && result.probability < 0.7 && '⚠️ Moderate chance. Consider this as a target college.'}
+                    {!result.status && result.probability < 0.5 && '❌ Lower chance of admission. This might be a reach college.'}
                   </div>
                 </div>
-                
-                <div style={{ 
-                  marginTop: '1rem', 
-                  padding: '0.75rem', 
-                  backgroundColor: result.probability >= 0.7 ? '#e8f5e9' : result.probability >= 0.5 ? '#fff3e0' : '#ffebee',
-                  borderRadius: '8px',
-                  fontSize: '0.9rem'
-                }}>
-                  {result.probability >= 0.7 && '✅ High chance of admission! This is a great match for your profile.'}
-                  {result.probability >= 0.5 && result.probability < 0.7 && '⚠️ Moderate chance. Consider this as a target college.'}
-                  {result.probability < 0.5 && '❌ Lower chance of admission. This might be a reach college.'}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
