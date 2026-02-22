@@ -156,6 +156,7 @@ ml-service/model/*.pkl
 # Database CSV files (if you don't want to commit raw data)
 database/*.csv
 !database/schema.sql
+!database/cutoff_history.csv
 
 # Python cache files
 __pycache__/
